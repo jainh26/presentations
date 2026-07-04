@@ -138,6 +138,36 @@ def section_slide(prs, num, ttl, sub, n, bg=PURPLE):
     txt(s, 12.0, 7.06, 0.8, 0.3, [[(str(n), 9, RGBColor(0xC9,0xB8,0xD8))]], align=PP_ALIGN.RIGHT)
     return s
 
+def workshop_opener(prs, wnum, title, payoff, agenda, n, accent=PINK, date="July 2026"):
+    """Chapter-style opener for each Workshop. White with colour rail + 5-step tracker."""
+    s = _blank(prs)
+    rect(s, 0, 0, 13.34, 7.5, fill=WHITE)
+    rect(s, 0, 0, 0.28, 7.5, fill=accent)
+    rect(s, 0.28, 0, 0.10, 7.5, fill=PURPLE)
+    logo(s)
+    # tracker
+    steps = ["Understand","Define","Meaning","Translate","Finalise"]
+    tx = 0.7; tw = 2.28
+    for i, st in enumerate(steps):
+        cur = (i+1 == wnum); done = (i+1 < wnum)
+        fill = accent if cur else (SOFTPK if done else SOFT)
+        tcol = WHITE if cur else (accent if done else GREY)
+        c = rect(s, tx, 0.55, tw, 0.5, fill=fill, shape=MSO_SHAPE.ROUNDED_RECTANGLE); c.adjustments[0]=0.16
+        txt(s, tx, 0.55, tw, 0.5, [[(f"{i+1}  {st}", 10.5, tcol, cur or done)]], align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE)
+        tx += tw + 0.09
+    txt(s, 0.7, 1.55, 9.0, 0.4, [[(f"WORKSHOP {wnum} OF 5", 13, accent, True)]])
+    txt(s, 0.7, 1.95, 11.8, 1.1, [[(title, 38, PURPLE, True, False, TITLE_FONT)]])
+    txt(s, 0.72, 3.05, 11.5, 0.6, [[(payoff, 16, accent, False, True)]], line_spacing=1.1)
+    # agenda card
+    card(s, 0.7, 3.85, 11.9, 2.75, fill=SOFT)
+    txt(s, 1.0, 4.05, 11.0, 0.4, [[("ON THE AGENDA",11,accent,True)]])
+    half = (len(agenda)+1)//2
+    colL = agenda[:half]; colR = agenda[half:]
+    txt(s, 1.0, 4.5, 5.6, 2.0, [[("•  "+a,12,CHAR)] for a in colL], space_after=7, line_spacing=1.08)
+    txt(s, 6.9, 4.5, 5.5, 2.0, [[("•  "+a,12,CHAR)] for a in colR], space_after=7, line_spacing=1.08)
+    footer(s, n, date)
+    return s
+
 def chip(slide, x, y, w, text, color=PINK, tcolor=WHITE, h=0.34, size=10):
     c = rect(slide, x, y, w, h, fill=color, shape=MSO_SHAPE.ROUNDED_RECTANGLE)
     c.adjustments[0] = 0.5
